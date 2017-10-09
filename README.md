@@ -1,7 +1,6 @@
 # Create
 
 - Basic Git Tutorial für olle Speizialisten
-
 	Git Desktop Client installieren
 
 - In gewolltes DIR wechseln
