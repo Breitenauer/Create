@@ -1,0 +1,41 @@
+img.createLogo{
+    display: block;
+    margin: auto;
+    margin-top: 5%;
+    width: 100px;
+}
+
+mat-card.upload {
+    width: 400px;
+    margin:auto;
+    margin-top: 5%;
+    height: 200px;
+}
+
+hr.card {
+    border: 0.4px solid lightgray;margin-bottom: 30px;margin-top: -10px;
+}
+
+input.upload {
+    margin-top: 30px;
+}
+
+button.upload {
+    position: absolute;
+    background-color: #B5D168;
+    right: 24px;
+    top: 130px;
+}
+
+section.upload {
+    margin-top: 30px;
+}
+
+/* Progress Bar Color */
+.mat-progress-bar-buffer {
+    background-color: #B5D168;
+}
+
+.mat-progress-bar-fill::after {
+    background-color: rgb(93, 107, 55);
+}
