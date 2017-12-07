@@ -1,21 +1,147 @@
-<img src="../assets/createLogoWhite.png" class="createLogo"/>
+<!-------------------- LOGO -------------------->
+<a href="#">
+<img src="../assets/createLogoWhite.png" class="createLogo" [@logoTransition]='logoStyle' [style.marginTop.px]="getImgMarginTop()"/>
+</a>
+<!-------------------- LOGIN -------------------->
+<mat-card class="loginBox" [@hideLogin]='loginStyle'>
 
-<mat-card class="upload">
+    <h1>Login</h1>
+    
+    <form class="login-form">
+        <mat-form-field class="example-full-width">
+          <input matInput placeholder="E-Mail" type="email">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Password" type="password">
+          </mat-form-field>
+    </form>
+<br>
+    <button mat-button class="register" style="float:left;" (click)="hideLogin()">Register</button>
+    <button mat-button class="login" style="float:right;" (click)="hideLogin()">Login</button>
+    
+</mat-card>
 
+
+<!-------------------- UPLOAD -------------------->
+<mat-card class="upload" [@hideUpload]='hideUpload' [@showUpload]='uploadState' [@logoTransition]='state'>
     <h1>File Upload</h1>
-<hr class="card">
 
-    <input id="file-field" name="file-field" (change)="uploadFile($event)" type="file" accept=".png,.jpg,.jpeg" class="upload">
+    <hr class="card">
     
-    <button mat-button class="upload" (click)="uploadFile($event)">Upload</button>
-    
-    <section class="upload">
-        <mat-progress-bar
-            [color]="color"
-            [mode]="mode"
-            [value]="value"
-            [bufferValue]="bufferValue">
-        </mat-progress-bar>
-    </section>
+        <input id="file-field" name="file-field" (change)="uploadFile($event)" type="file" accept=".txt,.png" class="upload">
+        
+        <button mat-button class="upload" (click)="uploadFile($event)">Upload</button>
+        
+        <section class="upload">
+            <mat-progress-bar
+                [color]="color"
+                [mode]="mode"
+                [value]="value"
+                [bufferValue]="bufferValue">
+            </mat-progress-bar>
+        </section>
+    <br>
+    <button mat-button style="float:right;" [disabled]="uploaded" (click)="uploadNext()">Next Step</button>
+</mat-card>
 
-</mat-card>  
+
+
+<!-- Comments -->
+<!-------------------- Timestamps ----------------------
+<mat-card class="timeBox" [@showTimestamps]='timeBox'>-->
+<mat-card class="timeBox mat-card" style="margin-bottom: 60px;">
+    <h1>Timestamps</h1>
+
+    <div class="gridList">
+        <div class="right">
+            <!--Videoview-->
+            <img src="../assets/thumbnail_video.png" class="thumbnail_video">
+            <button mat-button color="warn" (click)="prevStep()">Export</button>
+        </div>
+        <div class="left">
+    
+            <mat-accordion *ngFor="let d of decisions">
+                <mat-expansion-panel [expanded]="true" class="supDecision">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            {{d.title}}
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <mat-form-field class="example-margin">
+                        <input matInput type="number" placeholder="Value" [(ngModel)]="d.value">
+                    </mat-form-field>
+
+                    <mat-slider class="slider-margin" [value]="d.value" [max]="100" [min]="0" [thumb-label]="true"></mat-slider>
+
+                    <mat-form-field>
+                        <mat-select placeholder="Select Decision" [(ngModel)]="selectedValue">
+                            <mat-option *ngFor="let s of subDecisions" [value]="s.value">
+                                {{ s.viewValue }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <button mat-button style="float:right;margin-top:20px;" color="" (click)="createExpansion(d)">Ok</button>
+                    
+                </mat-expansion-panel>
+            
+                <!-- Left Right -->
+                <div *ngIf="d.isLR">
+                    <mat-expansion-panel *ngFor="let subtitle of decisionsLR" class="subDecision">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{d.title}} - {{subtitle}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <mat-form-field>
+                            <input matInput placeholder="First name">
+                        </mat-form-field>
+                        <br>
+                        Endet hier der Film?<br>
+                        <button mat-button (click)="endTrue()">Ja</button>
+                        <button mat-button (click)="endFalse()">Nein</button>
+                    </mat-expansion-panel>
+                </div>
+            
+                <!-- Up Down -->
+                <div *ngIf="d.isUD">
+                    <mat-expansion-panel *ngFor="let subtitle of decisionsUD" class="subDecision">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{d.title}} - {{subtitle}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <mat-form-field>
+                            <input matInput placeholder="First name">
+                        </mat-form-field>
+                        <br>
+                        Endet hier der Film?<br>
+                        <button mat-button (click)="endTrue()">Ja</button>
+                        <button mat-button (click)="endFalse()">Nein</button>
+                    </mat-expansion-panel>
+                </div>
+            
+                <!-- A B -->
+                <div *ngIf="d.isBtn">
+                    <mat-expansion-panel *ngFor="let subtitle of decisionsBtn" class="subDecision">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{d.title}} - {{subtitle}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <mat-form-field>
+                            <input matInput placeholder="First name">
+                        </mat-form-field>
+                        <br>
+                        Endet hier der Film?<br>
+                        <button mat-button (click)="endTrue()">Ja</button>
+                        <button mat-button (click)="endFalse()">Nein</button>
+                        <!--<button mat-button (click)="endFalse(slider value)">Nein</button>-->
+                    </mat-expansion-panel>
+                </div>
+
+            </mat-accordion>
+        </div>
+    </div>    
+</mat-card>

@@ -1,0 +1,22 @@
+<!-------------------- UPLOAD -------------------->
+<mat-card class="upload" [@hideUpload]='hideUpload' [@showUpload]='uploadState' [@logoTransition]='state'>
+    
+    <h1>File Upload</h1>
+
+    <hr class="card">
+    
+        <input id="file-field" name="file-field" (change)="uploadFile($event)" type="file" accept=".txt,.png" class="upload">
+        
+        <button mat-button class="upload" (click)="uploadFile($event)">Upload</button>
+        
+        <section class="upload">
+            <mat-progress-bar
+                [color]="color"
+                [mode]="mode"
+                [value]="value"
+                [bufferValue]="bufferValue">
+            </mat-progress-bar>
+        </section>
+    <br>
+    <button mat-button style="float:right;" [disabled]="uploaded" (click)="uploadNext()">Next Step</button>
+</mat-card>
