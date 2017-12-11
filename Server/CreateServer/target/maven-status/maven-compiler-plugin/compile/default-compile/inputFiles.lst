@@ -1,0 +1,17 @@
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/entity/Interaction.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/repository/InteractionFacade.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/websocket/WebSocketCore.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/service/ApplicationConfig.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/repository/AbstractFacade.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/entity/Player.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/websocket/DeviceConnection.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/dto/Linkcode.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/entity/Project.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/service/CreateResource.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/entity/Video.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/entity/Game.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/repository/PlayerFacade.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/repository/VideoFacade.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/repository/ProjectFacade.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/websocket/WebSocketCoreHolder.java
+/Users/bernhard/Desktop/5AHITM/InformationstechnischeProjekte/Create/Server/CreateServer/src/main/java/repository/GameFacade.java

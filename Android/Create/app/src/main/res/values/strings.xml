@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Create</string>
+    <string name="title_activity_signIn">Sign in</string>
+    <string name="title_activity_register">Register</string>
+    <string name="title_activity_linkcode">Connect to AppleTV</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_not_registered">Not registered?</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="action_register">Register now!</string>
+    <string name="action_passwordRepeat">Repeat password</string>
+    <string name="action_linkcode">Linkcode</string>
+    <string name="action_connect">Connect</string>
+    <string name="startProject">Start Project</string>
+    <string name="title_activity_a_or_b">a_or_b</string>
+    <string name="leftOrRight">Left or Right</string>
+    <string name="chooseProject">Choose Project</string>
+</resources>
