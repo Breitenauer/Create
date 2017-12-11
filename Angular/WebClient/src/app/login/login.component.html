@@ -1,0 +1,17 @@
+<!-------------------- LOGIN -------------------->
+<mat-card class="loginBox" [@hideLogin]='loginStyle'>
+    
+        <h1>Login</h1>
+        
+        <form class="login-form">
+            <mat-form-field class="example-full-width">
+              <input matInput placeholder="E-Mail">
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <input matInput placeholder="Password" type="password">
+              </mat-form-field>
+        </form>
+    <br>
+        <button mat-button class="register" style="float:left;" (click)="hideLogin()">Register</button>
+        <button mat-button class="login" style="float:right;" (click)="hideLogin()">Login</button>
+    </mat-card>

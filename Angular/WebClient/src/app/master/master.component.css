@@ -1,0 +1,124 @@
+p {
+    width:200px;
+    background:lightgray;
+    margin: 100px auto;
+    text-align:center;
+    padding:20px;
+    font-size:1.5em;
+}
+
+img.createLogo{
+    display: block;
+    margin: auto;
+    margin-top: 80px;
+    width: 100px;
+    transition: 0.2s all ease-in-out;
+}
+
+mat-card.upload {
+    width: 400px;
+    margin:auto;
+    margin-top: 70px;
+    height: 220px;
+}
+
+mat-card.loginBox {
+    width: 400px;
+    margin:auto;
+    margin-top: 70px;
+    height: 250px;
+}
+
+.login{
+    border: 2px solid #B5D168;
+    border-radius: 3px;
+    transition: 0.2s all;
+}
+
+.login:hover{
+    background-color: #B5D168;
+}
+
+.register{
+    border: 2px solid #333333;
+    border-radius: 3px;
+    transition: 0.2s all;
+}
+
+.register:hover{
+    background-color: #cfcfcf;
+}
+
+mat-card.loginBox .mat-form-field {
+    width: 400px;
+}
+
+hr.card {
+    border: 0.4px solid lightgray;margin-bottom: 30px;margin-top: -10px;
+}
+
+input.upload {
+    margin-top: 30px;
+}
+
+button.upload {
+    position: absolute;
+    background-color: #B5D168;
+    right: 24px;
+    top: 130px;
+}
+
+section.upload {
+    margin-top: 30px;
+}
+
+/* Progress Bar Color */
+.mat-progress-bar-buffer {
+    background-color: #B5D168;
+}
+
+.mat-progress-bar-fill::after {
+    background-color: #C0DE6E;
+}
+
+
+
+
+/*Timestamps*/
+.supDecision {
+    background-color: #B5D168;
+    color: white;
+}
+.subDecision {
+    background-color: #C0DE6E;
+}
+
+.left {
+    width: 60%;
+}
+.right {
+    width: 40%;
+    float: right;
+    text-align: center;
+}
+
+.thumbnail_video {
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 20px;
+}
+
+body {
+    padding-bottom: 50px;
+}
+
+.timeBox {
+    width: 50%;
+    margin: auto;
+    min-height: 290px;
+}
+
+.slider-margin {
+    width: 100%;
+}
