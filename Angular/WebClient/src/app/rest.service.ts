@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-/*import { Student } from './master/student';*/
+import { Decision } from "./decision";
 
 @Injectable()
 export class RestService {
@@ -22,10 +22,12 @@ export class RestService {
     findStudentsByTeam(teamid:string) {
       return this.http.get("http://localhost:8080/server/api/rest/findSbyT/"+teamid);
     }
-
-  /* PUT 
-    editStudent(student:Student){
-      return this.http.put("http://localhost:8080/server/api/rest/updateS/"+student.studentId, student);
+*/
+    // POST
+    uploadInteractions(decisions:Decision[]){
+      console.log("lets post!")
+      return this.http.post("http://localhost:8080/server/api/rest/test", decisions);
+      //return this.http.post("http://vm18.htl-leonding.ac.at:8080/api/create/createProject/", "asdf");
     }
     
   /* DELETE 

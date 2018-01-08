@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RestService } from '../rest.service';
 import { trigger,state,style,transition,animate,keyframes } from '@angular/animations';
+import { Decision } from "../decision";
 
 @Component({
   selector: 'app-master',
@@ -87,24 +88,13 @@ export class MasterComponent implements OnInit {
 
   //ExpansionPanel Var
   public decisions:Decision[] = [];
-    //Left Right 
-    public decisionsLR:string[] = ["Links", "Rechts"];
-    //Up Down
-    public decisionsUD:string[] = ["Oben", "Unten"];
-    //Button
-    public decisionsBtn:string[] = ["A", "B"];
 
-    //Slider
-    firstValue:number;
-    selectedValue: string;
-    
-    subDecisions = [
-      {value: 'lr', viewValue: 'Left or Right'},
-      {value: 'ud', viewValue: 'Up or Down'},
-      {value: 'ab', viewValue: 'A or B'}
-    ];
 
-  
+  subDecisions = [
+    {value: 'leftOrRight', viewValue: 'Left or Right'},
+    {value: 'upOrDown', viewValue: 'Up or Down'},
+    {value: 'aOrB', viewValue: 'A or B'}
+  ];
 
   public n: number = 1;
 
@@ -113,19 +103,22 @@ export class MasterComponent implements OnInit {
     this.value = 0;
   }
 
-
   ngOnInit() {
-    this.decisions.push({title: "Entscheidung 1", value: this.firstValue, isBtn: false, isLR: false, isUD:false});
+    this.decisions.push({title: "Entscheidung 1", methodname: "", timestampMin: "", timestampSek: "", timestampToAMin: "", timestampToASek: "", timestampToBMin: "", timestampToBSek: ""});
     this.uploaded = true;
+
     /* erstes Request an Server 
     this.students.push(new Student(null, "", "", null, null, null));
     this.rest.findTeams().subscribe(data => {this.teams = data});
-
     */
+  }
+
+  export(){
+    console.log("export started!")
+    this.rest.uploadInteractions(this.decisions).subscribe(data => {console.log(data)});
   }
     
   //Animation Functions
-
   uploadNext() {
     this.showTimeBox = true;
     this.allowImageMargin = true;
@@ -149,10 +142,8 @@ export class MasterComponent implements OnInit {
     
   }
 
-
-
+  //FileUpload
   uploadFile(event) {
-
     //Timeout - > Testzweck
     setTimeout(() => {
       this.n = this.n + 10;
@@ -166,45 +157,20 @@ export class MasterComponent implements OnInit {
     }
   }
 
-  selectTeam(){
-    /* response von Server
-    this.selectedTeam = team;
-    console.log("SELECTED TEAM: " + team.teamId);
-    this.rest.findStudentsByTeam(this.selectedTeam.teamId).subscribe(data => {this.students = data ;});
-    this.selectedStudent = new Student(null, "", "", null, null, null);
-    this.update = false;
-    this.nStd = true;
-*/
-  }
-
-  //Timestamps
-  createExpansion(dec:Decision) {
-    this.decisions.forEach(element => {
-      if(element.title == dec.title) {
-        switch(this.selectedValue){
-          case 'lr': element.isLR = true; element.isUD = false; element.isBtn = false; break;
-          case 'ud': element.isUD = true; element.isLR = false; element.isBtn = false; break;
-          case 'ab': element.isBtn = true; element.isLR = false; element.isUD = false; break;
-        }
-      }
-    });
-  }
-
-  endFalse() {
-
+  endFalse(nextStep:string) {
     //Entscheidung 1 wird disabled
     //löschen Button einführen
-    //Slider konfigurieren mit Zeit
-    //Export Button darf nur möglich sein, wenn alle Entscheidungen fertig sind (wenn alle "Endet hier der Film" mit "Ja" beantwortet werden konnten)
-    var count = this.decisions.length+1;
-    this.decisions.push({title: "Entscheidung "+count, value: this.firstValue, isBtn: false, isLR: false, isUD:false});    
-  }
-}
 
-export class Decision {
-  public title: string;
-  public value: number;
-  public isLR: boolean;
-  public isUD: boolean;
-  public isBtn: boolean;
+    //Export Button darf nur möglich sein, wenn alle Entscheidungen fertig sind (wenn alle "Endet hier der Film" mit "Ja" beantwortet werden konnten)
+
+    var count = this.decisions.length+1;
+    this.decisions.push({title: "Entscheidung "+ count + " - " + nextStep, methodname: "", timestampMin: "", timestampSek: "", timestampToAMin: "", timestampToASek: "", timestampToBMin: "", timestampToBSek: ""});
+  }
+
+
+  //Gedanken machen bei welchen Bedingungen nur das eine Ende abgefragt wird, nicht alle.... 
+  //Mit Berni ausmachen wie das Json aussehen soll, wenn der Film endet mit "Ja" gedrückt würde
+  endTrue() {
+
+  }
 }

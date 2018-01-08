@@ -1,8 +1,9 @@
 <!-------------------- LOGO -------------------->
 <a href="#">
-<img src="../assets/createLogoWhite.png" class="createLogo" [@logoTransition]='logoStyle' [style.marginTop.px]="getImgMarginTop()"/>
+    <img src="../assets/createLogoWhite.png" class="createLogo" [@logoTransition]='logoStyle' [style.marginTop.px]="getImgMarginTop()"
+    />
 </a>
-<!-------------------- LOGIN -------------------->
+<!-------------------- LOGIN --------------------
 <mat-card class="loginBox" [@hideLogin]='loginStyle'>
 
     <h1>Login</h1>
@@ -22,7 +23,7 @@
 </mat-card>
 
 
-<!-------------------- UPLOAD -------------------->
+<!-------------------- UPLOAD --------------------
 <mat-card class="upload" [@hideUpload]='hideUpload' [@showUpload]='uploadState' [@logoTransition]='state'>
     <h1>File Upload</h1>
 
@@ -47,19 +48,19 @@
 
 
 <!-- Comments -->
-<!-------------------- Timestamps ----------------------
+<!-------------------- Timestamps ------------------------
 <mat-card class="timeBox" [@showTimestamps]='timeBox'>-->
 <mat-card class="timeBox mat-card" style="margin-bottom: 60px;">
     <h1>Timestamps</h1>
 
     <div class="gridList">
         <div class="right">
-            <!--Videoview-->
-            <img src="../assets/thumbnail_video.png" class="thumbnail_video">
-            <button mat-button color="warn" (click)="prevStep()">Export</button>
+            <!--Videoview
+            <img src="../assets/thumbnail_video.png" class="thumbnail_video">-->
+            <button mat-button color="warn" (click)="export()">Export</button>
         </div>
         <div class="left">
-    
+
             <mat-accordion *ngFor="let d of decisions">
                 <mat-expansion-panel [expanded]="true" class="supDecision">
                     <mat-expansion-panel-header>
@@ -68,80 +69,283 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <mat-form-field class="example-margin">
-                        <input matInput type="number" placeholder="Value" [(ngModel)]="d.value">
-                    </mat-form-field>
-
-                    <mat-slider class="slider-margin" [value]="d.value" [max]="100" [min]="0" [thumb-label]="true"></mat-slider>
+                    <form #f="ngForm">
+                        <table>
+                            <tr>
+                                <td style="padding-bottom: 5px;">Zeit</td>
+                                <td></td>
+                                <td>
+                                    <mat-form-field style="width: 18px;">
+                                        <input matInput [(ngModel)]="d.timestampMin" style="text-align: right;padding-right: 2px;" maxlength="2" name="Min" required pattern="([0-5]*[0-9])" />
+                                    </mat-form-field>
+                                </td>
+                                <td style="padding-bottom: 5px;">:</td>
+                                <td>
+                                    <mat-form-field style="width: 18px;">
+                                        <input matInput [(ngModel)]="d.timestampSek" maxlength="2" name="Sek" required pattern="([0-5][0-9])" />
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
 
                     <mat-form-field>
-                        <mat-select placeholder="Select Decision" [(ngModel)]="selectedValue">
+                        <mat-select placeholder="Select Decision" [(ngModel)]="d.methodname" [disabled]="!f.form.valid">
                             <mat-option *ngFor="let s of subDecisions" [value]="s.value">
                                 {{ s.viewValue }}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-
-                    <button mat-button style="float:right;margin-top:20px;" color="" (click)="createExpansion(d)">Ok</button>
                     
                 </mat-expansion-panel>
-            
+
+
                 <!-- Left Right -->
-                <div *ngIf="d.isLR">
-                    <mat-expansion-panel *ngFor="let subtitle of decisionsLR" class="subDecision">
+                <div *ngIf="d.methodname=='leftOrRight'">
+                    <mat-expansion-panel class="subDecision" #panel1>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                {{d.title}} - {{subtitle}}
+                                {{d.title}} - Left
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <mat-form-field>
-                            <input matInput placeholder="First name">
-                        </mat-form-field>
+
+                        <form #fLeft="ngForm">
+                            <table>
+                                <tr>
+                                    <td style="padding-bottom: 5px;">Zeit</td>
+                                    <td></td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToAMin" style="text-align: right;padding-right: 2px;" maxlength="2" name="Min" required pattern="([0-5]*[0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                    <td style="padding-bottom: 5px;">:</td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToASek" maxlength="2" name="Sek" required pattern="([0-5][0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+
                         <br>
-                        Endet hier der Film?<br>
-                        <button mat-button (click)="endTrue()">Ja</button>
-                        <button mat-button (click)="endFalse()">Nein</button>
+                        <div *ngIf="fLeft.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <div *ngIf="!fLeft.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <br>
+                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue()" >Ja</button>
+                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endFalse('Left')" (click)="panel1.expanded = true" (click)="panel1.expanded = false">Nein</button>
+                        
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="subDecision" #panel2>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{d.title}} - Right
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                        <form #fRight="ngForm">
+                            <table>
+                                <tr>
+                                    <td style="padding-bottom: 5px;">Zeit</td>
+                                    <td></td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToBMin" style="text-align: right;padding-right: 2px;" maxlength="2" name="Min" required pattern="([0-5]*[0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                    <td style="padding-bottom: 5px;">:</td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToBSek" maxlength="2" name="Sek" required pattern="([0-5][0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+
+                        <br>
+                        <div *ngIf="fRight.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <div *ngIf="!fRight.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <br>
+                        <button mat-button [disabled]="!fRight.form.valid" (click)="endTrue()">Ja</button>
+                        <button mat-button [disabled]="!fRight.form.valid" (click)="endFalse('Right')">Nein</button>
                     </mat-expansion-panel>
                 </div>
-            
+
                 <!-- Up Down -->
-                <div *ngIf="d.isUD">
-                    <mat-expansion-panel *ngFor="let subtitle of decisionsUD" class="subDecision">
+                <div *ngIf="d.methodname=='upOrDown'">
+                <mat-expansion-panel class="subDecision">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                {{d.title}} - {{subtitle}}
+                                {{d.title}} - Up
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <mat-form-field>
-                            <input matInput placeholder="First name">
-                        </mat-form-field>
+
+                        <form #fUp="ngForm">
+                            <table>
+                                <tr>
+                                    <td style="padding-bottom: 5px;">Zeit</td>
+                                    <td></td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToAMin" style="text-align: right;padding-right: 2px;" maxlength="2" name="Min" required pattern="([0-5]*[0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                    <td style="padding-bottom: 5px;">:</td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToASek" maxlength="2" name="Sek" required pattern="([0-5][0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+
                         <br>
-                        Endet hier der Film?<br>
-                        <button mat-button (click)="endTrue()">Ja</button>
-                        <button mat-button (click)="endFalse()">Nein</button>
+                        <div *ngIf="fUp.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <div *ngIf="!fUp.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <br>
+                        <button mat-button [disabled]="!fUp.form.valid" (click)="endTrue()">Ja</button>
+                        <button mat-button [disabled]="!fUp.form.valid" (click)="endFalse('Up')">Nein</button>
+                        
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="subDecision">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{d.title}} - Down
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                        <form #fDown="ngForm">
+                            <table>
+                                <tr>
+                                    <td style="padding-bottom: 5px;">Zeit</td>
+                                    <td></td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToBMin" style="text-align: right;padding-right: 2px;" maxlength="2" name="Min" required pattern="([0-5]*[0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                    <td style="padding-bottom: 5px;">:</td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToBSek" maxlength="2" name="Sek" required pattern="([0-5][0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+
+                        <br>
+                        <div *ngIf="fDown.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <div *ngIf="!fDown.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <br>
+                        <button mat-button [disabled]="!fDown.form.valid" (click)="endTrue()">Ja</button>
+                        <button mat-button [disabled]="!fDown.form.valid" (click)="endFalse('Down')">Nein</button>
                     </mat-expansion-panel>
                 </div>
-            
+
                 <!-- A B -->
-                <div *ngIf="d.isBtn">
-                    <mat-expansion-panel *ngFor="let subtitle of decisionsBtn" class="subDecision">
+                <div *ngIf="d.methodname=='aOrB'">
+                    <mat-expansion-panel class="subDecision">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                {{d.title}} - {{subtitle}}
+                                {{d.title}} - A
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <mat-form-field>
-                            <input matInput placeholder="First name">
-                        </mat-form-field>
+
+                        <form #fA="ngForm">
+                            <table>
+                                <tr>
+                                    <td style="padding-bottom: 5px;">Zeit</td>
+                                    <td></td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToAMin" style="text-align: right;padding-right: 2px;" maxlength="2" name="Min" required pattern="([0-5]*[0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                    <td style="padding-bottom: 5px;">:</td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToASek" maxlength="2" name="Sek" required pattern="([0-5][0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+
                         <br>
-                        Endet hier der Film?<br>
-                        <button mat-button (click)="endTrue()">Ja</button>
-                        <button mat-button (click)="endFalse()">Nein</button>
-                        <!--<button mat-button (click)="endFalse(slider value)">Nein</button>-->
+                        <div *ngIf="fA.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <div *ngIf="!fA.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <br>
+                        <button mat-button [disabled]="!fA.form.valid" (click)="endTrue()">Ja</button>
+                        <button mat-button [disabled]="!fA.form.valid" (click)="endFalse('A')">Nein</button>
+                        
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="subDecision">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{d.title}} - B
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                        <form #fB="ngForm">
+                            <table>
+                                <tr>
+                                    <td style="padding-bottom: 5px;">Zeit</td>
+                                    <td></td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToBMin" style="text-align: right;padding-right: 2px;" maxlength="2" name="Min" required pattern="([0-5]*[0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                    <td style="padding-bottom: 5px;">:</td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToBSek" maxlength="2" name="Sek" required pattern="([0-5][0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+
+                        <br>
+                        <div *ngIf="fB.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <div *ngIf="!fB.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <br>
+                        <button mat-button [disabled]="!fB.form.valid" (click)="endTrue()">Ja</button>
+                        <button mat-button [disabled]="!fB.form.valid" (click)="endFalse('B')">Nein</button>
+
+                        <form #fBend="ngForm">
+                            <table>
+                                <tr>
+                                    <td style="padding-bottom: 5px;">Zeit</td>
+                                    <td></td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToBMin" style="text-align: right;padding-right: 2px;" maxlength="2" name="Min" required pattern="([0-5]*[0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                    <td style="padding-bottom: 5px;">:</td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToBSek" maxlength="2" name="Sek" required pattern="([0-5][0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                        <button mat-button [disabled]="!fBend.form.valid" (click)="endTrue()">Ok</button>
+<!-- BEIM EXPORT SCHAUEN OB HIER NICHT ETWAS NICHT VALID IST -->
+<!-- ZEILE 137   <button mat-button [disabled]="!fLeft.form.valid" (click)="endFalse('Left')" (click)="panel1.expanded = true" (click)="panel1.expanded = false">Nein</button> AUSFEILEN MIT PANEL EXPANDED ETC.
+
+
+    
                     </mat-expansion-panel>
                 </div>
 
             </mat-accordion>
         </div>
-    </div>    
+    </div>
 </mat-card>
