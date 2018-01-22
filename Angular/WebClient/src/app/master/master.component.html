@@ -1,30 +1,47 @@
+<button style="position: fixed; left: 10px;top: 30px; font-size: 50px;cursor: pointer; background:none;border:none; outline:none" *ngIf="allowLogout" (click)="logout()"><i class="material-icons">keyboard_arrow_left</i></button>
 <!-------------------- LOGO -------------------->
-<a href="#">
+<!--<a href="#">-->
     <img src="../assets/createLogoWhite.png" class="createLogo" [@logoTransition]='logoStyle' [style.marginTop.px]="getImgMarginTop()"
     />
-</a>
-<!-------------------- LOGIN --------------------
-<mat-card class="loginBox" [@hideLogin]='loginStyle'>
+<!--</a>-->
+<!-------------------- LOGIN -------------------->
+<mat-card class="loginBox" [@hideLogin]='loginStyle' [@animateRegister]='registerStyle'>
 
-    <h1>Login</h1>
+    <h1 *ngIf="!allowRegister">Login</h1>
     
-    <form class="login-form">
+    <form class="login-form" *ngIf="!allowRegister">
         <mat-form-field class="example-full-width">
-          <input matInput placeholder="E-Mail" type="email">
+          <input matInput placeholder="E-Mail" type="email" [(ngModel)]="email" name="email">
         </mat-form-field>
         <mat-form-field class="example-full-width">
-            <input matInput placeholder="Password" type="password">
+            <input matInput placeholder="Password" type="password" [(ngModel)]="password" name="password">
           </mat-form-field>
     </form>
+
+    <h1 *ngIf="allowRegister">Register</h1>
+
+    <form class="login-form" *ngIf="allowRegister">
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="E-Mail" type="email" [(ngModel)]="email" name="email">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Password" type="password" [(ngModel)]="password" name="password">
+        </mat-form-field>
+    </form>
+
 <br>
-    <button mat-button class="register" style="float:left;" (click)="hideLogin()">Register</button>
-    <button mat-button class="login" style="float:right;" (click)="hideLogin()">Login</button>
+
+<button mat-button class="register" style="float:left;" (click)="register()" *ngIf="!allowRegister">Register</button>
+<button mat-button name="logi" class="login" style="float:right;" (click)="login()" *ngIf="!allowRegister">Login</button>
+<button mat-button class="login" style="float:right;" (click)="loginRegister()" *ngIf="allowRegister">Register</button>
+<button mat-button name="rege" class="register" style="float:left;" (click)="backLogin()" *ngIf="allowRegister">Back To Login</button>
+
     
 </mat-card>
 
 
-<!-------------------- UPLOAD --------------------
-<mat-card class="upload" [@hideUpload]='hideUpload' [@showUpload]='uploadState' [@logoTransition]='state'>
+<!-------------------- UPLOAD -------------------->
+<mat-card class="upload" [@hideUpload]='hideUpload' [@showUpload]='uploadState'>
     <h1>File Upload</h1>
 
     <hr class="card">
@@ -47,22 +64,38 @@
 
 
 
+
+
 <!-- Comments -->
-<!-------------------- Timestamps ------------------------
-<mat-card class="timeBox" [@showTimestamps]='timeBox'>-->
-<mat-card class="timeBox mat-card" style="margin-bottom: 60px;">
-    <h1>Timestamps</h1>
+<!-------------------- Timestamps ------------------------>
+<mat-card class="timeBox" [@showTimestamps]='timeBox'>
+<!--<mat-card class="timeBox mat-card" style="margin-bottom: 60px;">-->
+    <h1>Projekt Timestamps</h1>
+
+    <form class="login-form" style="margin-bottom: 20px;">
+        <mat-form-field class="example-full-width">
+          <input matInput placeholder="Projektname" type="text">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Beschreibung" type="text">
+          </mat-form-field><br>
+          
+        <mat-checkbox>Public</mat-checkbox>
+    </form>
 
     <div class="gridList">
         <div class="right">
+                <h1 style="color: #3f3f3f; margin-top: -120px; font-size: 15px;" *ngIf="!allowLogout">{{email}}</h1>
+                <button style="color:#3f3f3f; margin-bottom: 20px;" *ngIf="!allowLogout" (click)="logout()">Log Out</button>
+
             <!--Videoview
             <img src="../assets/thumbnail_video.png" class="thumbnail_video">-->
+            <video [src]="src" controls></video>
             <button mat-button color="warn" (click)="export()">Export</button>
         </div>
         <div class="left">
-
-            <mat-accordion *ngFor="let d of decisions">
-                <mat-expansion-panel [expanded]="true" class="supDecision">
+            <mat-accordion *ngFor="let d of decisions" >
+                <mat-expansion-panel class="supDecision">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             {{d.title}}
@@ -102,7 +135,7 @@
 
                 <!-- Left Right -->
                 <div *ngIf="d.methodname=='leftOrRight'">
-                    <mat-expansion-panel class="subDecision" #panel1>
+                    <mat-expansion-panel class="subDecision" #dleft>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{d.title}} - Left
@@ -128,16 +161,17 @@
                                 </tr>
                             </table>
                         </form>
+                    
 
                         <br>
                         <div *ngIf="fLeft.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <div *ngIf="!fLeft.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <br>
-                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue()" >Ja</button>
-                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endFalse('Left')" (click)="panel1.expanded = true" (click)="panel1.expanded = false">Nein</button>
+                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue(d.title-left)" (click)="dleft.expanded = false" >Ja</button>
+                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endFalse('Left')" (click)="dleft.expanded = false">Nein</button>
                         
                     </mat-expansion-panel>
-                    <mat-expansion-panel class="subDecision" #panel2>
+                    <mat-expansion-panel class="subDecision" #dright>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{d.title}} - Right
@@ -168,14 +202,14 @@
                         <div *ngIf="fRight.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <div *ngIf="!fRight.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <br>
-                        <button mat-button [disabled]="!fRight.form.valid" (click)="endTrue()">Ja</button>
-                        <button mat-button [disabled]="!fRight.form.valid" (click)="endFalse('Right')">Nein</button>
+                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue(d.title-right)" (click)="dright.expanded = false" >Ja</button>
+                        <button mat-button [disabled]="!fRight.form.valid" (click)="endFalse('Right')" (click)="dright.expanded = false">Nein</button>
                     </mat-expansion-panel>
                 </div>
 
                 <!-- Up Down -->
                 <div *ngIf="d.methodname=='upOrDown'">
-                <mat-expansion-panel class="subDecision">
+                <mat-expansion-panel class="subDecision" #dup>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{d.title}} - Up
@@ -206,11 +240,11 @@
                         <div *ngIf="fUp.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <div *ngIf="!fUp.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <br>
-                        <button mat-button [disabled]="!fUp.form.valid" (click)="endTrue()">Ja</button>
-                        <button mat-button [disabled]="!fUp.form.valid" (click)="endFalse('Up')">Nein</button>
+                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue(d.title-up)" (click)="dup.expanded = false" >Ja</button>
+                        <button mat-button [disabled]="!fUp.form.valid" (click)="endFalse('Up')" (click)="dup.expanded = false">Nein</button>
                         
                     </mat-expansion-panel>
-                    <mat-expansion-panel class="subDecision">
+                    <mat-expansion-panel class="subDecision" #ddown>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{d.title}} - Down
@@ -241,14 +275,14 @@
                         <div *ngIf="fDown.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <div *ngIf="!fDown.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <br>
-                        <button mat-button [disabled]="!fDown.form.valid" (click)="endTrue()">Ja</button>
-                        <button mat-button [disabled]="!fDown.form.valid" (click)="endFalse('Down')">Nein</button>
+                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue(d.title-down)" (click)="ddown.expanded = false" >Ja</button>
+                        <button mat-button [disabled]="!fDown.form.valid" (click)="endFalse('Down')" (click)="ddown.expanded = false" >Nein</button>
                     </mat-expansion-panel>
                 </div>
 
                 <!-- A B -->
                 <div *ngIf="d.methodname=='aOrB'">
-                    <mat-expansion-panel class="subDecision">
+                    <mat-expansion-panel class="subDecision" #da>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{d.title}} - A
@@ -279,11 +313,11 @@
                         <div *ngIf="fA.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <div *ngIf="!fA.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <br>
-                        <button mat-button [disabled]="!fA.form.valid" (click)="endTrue()">Ja</button>
-                        <button mat-button [disabled]="!fA.form.valid" (click)="endFalse('A')">Nein</button>
+                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue(d.title-a)" (click)="da.expanded = false" >Ja</button>
+                        <button mat-button [disabled]="!fA.form.valid" (click)="endFalse('A')" (click)="da.expanded = false" >Nein</button>
                         
                     </mat-expansion-panel>
-                    <mat-expansion-panel class="subDecision">
+                    <mat-expansion-panel class="subDecision" #db>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{d.title}} - B
@@ -314,8 +348,8 @@
                         <div *ngIf="fB.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <div *ngIf="!fB.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <br>
-                        <button mat-button [disabled]="!fB.form.valid" (click)="endTrue()">Ja</button>
-                        <button mat-button [disabled]="!fB.form.valid" (click)="endFalse('B')">Nein</button>
+                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue(d.title-b)" (click)="db.expanded = false" >Ja</button>
+                        <button mat-button [disabled]="!fB.form.valid" (click)="endFalse('B')" (click)="db.expanded = false" >Nein</button>
 
                         <form #fBend="ngForm">
                             <table>
@@ -337,10 +371,10 @@
                             </table>
                         </form>
                         <button mat-button [disabled]="!fBend.form.valid" (click)="endTrue()">Ok</button>
+                        
 <!-- BEIM EXPORT SCHAUEN OB HIER NICHT ETWAS NICHT VALID IST -->
 <!-- ZEILE 137   <button mat-button [disabled]="!fLeft.form.valid" (click)="endFalse('Left')" (click)="panel1.expanded = true" (click)="panel1.expanded = false">Nein</button> AUSFEILEN MIT PANEL EXPANDED ETC.
-
-
+-->
     
                     </mat-expansion-panel>
                 </div>

@@ -14,6 +14,9 @@ import { UploadComponent } from './upload/upload.component';
 import { LoginComponent } from './login/login.component';
 import { TimestampsComponent } from './timestamps/timestamps.component';
 
+import {MatCheckboxModule} from '@angular/material/checkbox';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +39,8 @@ import { TimestampsComponent } from './timestamps/timestamps.component';
     MatExpansionModule,
     MatSelectModule,
     MatGridListModule,
-    MatSliderModule
+    MatSliderModule,
+    MatCheckboxModule
   ],
   providers: [RestService],
   bootstrap: [AppComponent]

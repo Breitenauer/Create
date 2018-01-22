@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { RestService } from '../rest.service';
 import { trigger,state,style,transition,animate,keyframes } from '@angular/animations';
-import { Decision } from "../decision";
+import { Decision } from "../decision2";
+import { Player } from "../player";
+
 
 @Component({
   selector: 'app-master',
@@ -19,6 +21,14 @@ import { Decision } from "../decision";
         opacity: 0
       })),
       transition('loginBefore <=> loginAfter', animate('200ms ease-in')),
+    ]),
+
+    trigger('animateRegister', [
+      state('registerBefore', style({
+      })),
+      state('registerAfter', style({
+      })),
+      transition('registerBefore <=> registerAfter', animate('200ms ease-in')),
     ]),
     
     trigger('showUpload', [
@@ -43,6 +53,7 @@ import { Decision } from "../decision";
       transition('hideUploadBefore <=> hideUploadAfter', animate('500ms ease-in')),
     ]),
     
+
     trigger('logoTransition', [
       state('logoBefore', style({
         transform: 'scale(1)'
@@ -56,11 +67,11 @@ import { Decision } from "../decision";
     trigger('showTimestamps', [
       state('timeBefore', style({
         top: '0px',
-        visibility: 'hidden'
+        opacity: 0
       })),
       state('timeAfter', style({  
-        top: '-720px',
-        visibility: 'visible'
+        top: '-710px',
+        opacity: 1
       })),
       transition('timeBefore <=> timeAfter', animate('200ms ease-in')),
     ])
@@ -80,14 +91,22 @@ export class MasterComponent implements OnInit {
   //Animation Var
   logoStyle: string = 'logoBefore';
   loginStyle: string = 'loginBefore';
+  registerStyle: string = 'registerBefore';
   uploadState: string = 'uploadBefore';
+  projectState: string = 'projectBefore';
   hideUpload: string = 'hideUploadBefore';
+  hideProject: string = 'hideProjectBefore';
   timeBox: string = 'timeBefore';
+
   showTimeBox: boolean = false;
   allowImageMargin: boolean = false;
 
   //ExpansionPanel Var
   public decisions:Decision[] = [];
+
+
+  //Video Source
+  src = "http://vm18.htl-leonding.ac.at:8080/videos/video1.mp4";
 
 
   subDecisions = [
@@ -104,6 +123,7 @@ export class MasterComponent implements OnInit {
   }
 
   ngOnInit() {
+    
     this.decisions.push({title: "Entscheidung 1", methodname: "", timestampMin: "", timestampSek: "", timestampToAMin: "", timestampToASek: "", timestampToBMin: "", timestampToBSek: ""});
     this.uploaded = true;
 
@@ -126,11 +146,65 @@ export class MasterComponent implements OnInit {
     this.logoStyle = (this.logoStyle === 'logoBefore' ? 'logoAfter' : 'logoBefore');
     this.hideUpload = (this.hideUpload === 'hideUploadBefore' ? 'hideUploadAfter' : 'hideUploadBefore');
     this.timeBox = (this.timeBox === 'timeBefore' ? 'timeAfter' : 'timeBefore');    
+    this.allowLogout = false;
   }
-  
+
+  //LOGIN - REGISTER
+  allowRegister:boolean = false;
+  allowLogout:boolean = false;
+  email:string;
+  password:string;
+
+  players :Array<Player> = [];
+
+  register(){
+    this.allowRegister = true;
+    this.allowLogout = false;
+    this.registerAnimation()
+  }
+
+  login() {
+    this.rest.checkPlayer().subscribe(data => {this.players = data
+      this.players.forEach(p => {
+        if (p.email == this.email && p.password == this.password) {
+          this.allowRegister = true;
+          this.allowLogout = true;
+          this.hideLogin();
+        }
+      });
+      if (!this.allowLogout) {
+        alert("Daten falsch!");
+      }
+    });
+  }
+
+  logout(){
+    window.location.reload();
+  }
+
+  loginRegister() {
+    console.log(this.email)
+    console.log(this.password)
+    this.rest.createPlayer(this.email, this.password).subscribe(data => {
+      if(data){
+        this.hideLogin();
+        this.allowLogout = true;
+      } else {
+        alert("Address already in use.")
+      }});
+  }
+
+  backLogin(){
+    window.location.reload();
+  }
+
   hideLogin() {
     this.loginStyle = (this.loginStyle === 'loginBefore' ? 'loginAfter' : 'loginBefore');
     this.uploadState = (this.uploadState === 'uploadBefore' ? 'uploadAfter' : 'uploadBefore');
+  }
+
+  registerAnimation(){
+    this.registerStyle = (this.registerStyle === 'registerBefore' ? 'registerAfter' : 'registerBefore');
   }
 
   getImgMarginTop() {
@@ -170,7 +244,18 @@ export class MasterComponent implements OnInit {
 
   //Gedanken machen bei welchen Bedingungen nur das eine Ende abgefragt wird, nicht alle.... 
   //Mit Berni ausmachen wie das Json aussehen soll, wenn der Film endet mit "Ja" gedrückt würde
-  endTrue() {
 
+  // Decision push --> methodname = death
+
+  endTrue(title:string) {
+    this.expand(title);
+  }
+
+  expand(title:string){
+   /* if (title == this.newTitle) {
+      return true;
+    } else {
+      return false;
+    }*/
   }
 }

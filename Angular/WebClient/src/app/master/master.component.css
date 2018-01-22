@@ -10,8 +10,7 @@ p {
 img.createLogo{
     display: block;
     margin: auto;
-    margin-top: 80px;
-    width: 100px;
+    width: 80px;
     transition: 0.2s all ease-in-out;
 }
 
@@ -23,6 +22,13 @@ mat-card.upload {
 }
 
 mat-card.loginBox {
+    width: 400px;
+    margin:auto;
+    margin-top: 70px;
+    height: 250px;
+}
+
+mat-card.projectBox {
     width: 400px;
     margin:auto;
     margin-top: 70px;
@@ -93,16 +99,18 @@ section.upload {
 }
 
 .left {
-    width: 60%;
+    width: 40%;
 }
 .right {
-    width: 40%;
+    width: 55%;
+    padding-left: 0px;
+    padding-right: 10px;
     float: right;
     text-align: center;
 }
 
 .thumbnail_video {
-    width: 80%;
+    width: 40%;
     margin-left: 10%;
     margin-right: 10%;
     margin-bottom: 20px;
@@ -113,11 +121,21 @@ body {
 }
 
 .timeBox {
-    width: 50%;
+    width: 80%;
     margin: auto;
-    min-height: 290px;
+    min-height: 480px;
 }
+
+.mat-button.mat-warn, .mat-icon-button.mat-warn {
+    border: 1px solid #3f3f3f;
+}
+
 
 .slider-margin {
     width: 100%;
+}
+
+.material-icons {
+    font-size: 80px;
+    color: white;
 }
