@@ -3,6 +3,11 @@ import { RestService } from '../rest.service';
 import { trigger,state,style,transition,animate,keyframes } from '@angular/animations';
 import { Decision } from "../decision2";
 import { Player } from "../player";
+import {MatSnackBar} from '@angular/material';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { ThankyouDialogComponent } from 'app/thankyou-dialog/thankyou-dialog.component';
+
+
 
 
 @Component({
@@ -101,6 +106,8 @@ export class MasterComponent implements OnInit {
   showTimeBox: boolean = false;
   allowImageMargin: boolean = false;
 
+  loading: boolean = false;
+
   //ExpansionPanel Var
   public decisions:Decision[] = [];
 
@@ -117,7 +124,7 @@ export class MasterComponent implements OnInit {
 
   public n: number = 1;
 
-  constructor(rest:RestService) {
+  constructor(rest:RestService, public snackBar: MatSnackBar, public dialog: MatDialog) {
     this.rest = rest;
     this.value = 0;
   }
@@ -133,9 +140,17 @@ export class MasterComponent implements OnInit {
     */
   }
 
+  timer: any;
+
   export(){
+    this.loading = true;
     console.log("export started!")
-    this.rest.uploadInteractions(this.decisions).subscribe(data => {console.log(data)});
+    this.rest.uploadInteractions(this.decisions).subscribe(data => {console.log(data);
+      this.timer = setTimeout(() => {
+        this.loading = false
+        this.thankYou()
+    }, 500);
+    });
   }
     
   //Animation Functions
@@ -173,7 +188,9 @@ export class MasterComponent implements OnInit {
         }
       });
       if (!this.allowLogout) {
-        alert("Daten falsch!");
+        this.snackBar.open("E-Mail oder Passwort nicht korrekt!", "OK", {
+          duration: 2000,
+        });
       }
     });
   }
@@ -190,7 +207,9 @@ export class MasterComponent implements OnInit {
         this.hideLogin();
         this.allowLogout = true;
       } else {
-        alert("Address already in use.")
+        this.snackBar.open("Diese E-Mail adresse ist bereits vergeben!", "OK", {
+          duration: 2000,
+        });
       }});
   }
 
@@ -221,8 +240,8 @@ export class MasterComponent implements OnInit {
     //Timeout - > Testzweck
     setTimeout(() => {
       this.n = this.n + 10;
-    this.value = 100;  
-    this.uploaded = false;    
+      this.value = 100;  
+      this.uploaded = false;
     }, 1000);
         
     let files = event.target.files;
@@ -239,6 +258,20 @@ export class MasterComponent implements OnInit {
 
     var count = this.decisions.length+1;
     this.decisions.push({title: "Entscheidung "+ count + " - " + nextStep, methodname: "", timestampMin: "", timestampSek: "", timestampToAMin: "", timestampToASek: "", timestampToBMin: "", timestampToBSek: ""});
+  }
+
+
+  
+  thankYou(): void {
+    let dialogRef = this.dialog.open(ThankyouDialogComponent, {
+      width: '500px',
+      data: { name: "asdf", animal: "jklö" }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+    });
   }
 
 

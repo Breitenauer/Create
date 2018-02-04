@@ -69,6 +69,7 @@
 <!-- Comments -->
 <!-------------------- Timestamps ------------------------>
 <mat-card class="timeBox" [@showTimestamps]='timeBox'>
+
 <!--<mat-card class="timeBox mat-card" style="margin-bottom: 60px;">-->
     <h1>Projekt Timestamps</h1>
 
@@ -83,6 +84,25 @@
         <mat-checkbox>Public</mat-checkbox>
     </form>
 
+    <!-- PROGRESS SPINNER -->
+    <div *ngIf="loading">
+        <mat-spinner style="position: fixed;z-index: 999;height: 2em;width: 2em;overflow: show;margin: auto;top: 0;left: 0;bottom: 0;right: 0;"></mat-spinner>
+        <div id="layer"></div>
+        <style type="css">
+            
+            #layer {
+                left: -10%;
+                top: -10%;
+                width: 120%;
+                opacity: 0.8;
+                height: 120%;
+                background-color: black;
+                position: fixed;
+                z-index: 1;
+            }
+        </style>
+    </div>
+
     <div class="gridList">
         <div class="right">
                 <h1 style="color: #3f3f3f; margin-top: -120px; font-size: 15px;" *ngIf="!allowLogout">{{email}}</h1>
@@ -91,7 +111,7 @@
             <!--Videoview
             <img src="../assets/thumbnail_video.png" class="thumbnail_video">-->
             <video [src]="src" controls></video>
-            <button mat-button color="warn" (click)="export()">Export</button>
+            <button mat-button color="warn" (click)="export()" style="margin-top: 20px;">Export</button>
         </div>
         <div class="left">
             <mat-accordion *ngFor="let d of decisions" >
@@ -132,7 +152,6 @@
                     
                 </mat-expansion-panel>
 
-
                 <!-- Left Right -->
                 <div *ngIf="d.methodname=='leftOrRight'">
                     <mat-expansion-panel class="subDecision" #dleft>
@@ -161,14 +180,13 @@
                                 </tr>
                             </table>
                         </form>
-                    
 
                         <br>
                         <div *ngIf="fLeft.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <div *ngIf="!fLeft.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <br>
                         <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue(d.title-left)" (click)="dleft.expanded = false" >Ja</button>
-                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endFalse('Left')" (click)="dleft.expanded = false">Nein</button>
+                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endFalse('Left')">Nein</button>
                         
                     </mat-expansion-panel>
                     <mat-expansion-panel class="subDecision" #dright>
@@ -203,13 +221,14 @@
                         <div *ngIf="!fRight.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <br>
                         <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue(d.title-right)" (click)="dright.expanded = false" >Ja</button>
-                        <button mat-button [disabled]="!fRight.form.valid" (click)="endFalse('Right')" (click)="dright.expanded = false">Nein</button>
+                        <button mat-button [disabled]="!fRight.form.valid" (click)="endFalse('Right')">Nein</button>
                     </mat-expansion-panel>
                 </div>
 
-                <!-- Up Down -->
+
+                <!-- Up Or Down -->
                 <div *ngIf="d.methodname=='upOrDown'">
-                <mat-expansion-panel class="subDecision" #dup>
+                    <mat-expansion-panel class="subDecision" #dup>
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{d.title}} - Up
@@ -240,8 +259,8 @@
                         <div *ngIf="fUp.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <div *ngIf="!fUp.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <br>
-                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue(d.title-up)" (click)="dup.expanded = false" >Ja</button>
-                        <button mat-button [disabled]="!fUp.form.valid" (click)="endFalse('Up')" (click)="dup.expanded = false">Nein</button>
+                        <button mat-button [disabled]="!fUp.form.valid" (click)="endTrue(d.title-up)" (click)="dup.expanded = false" >Ja</button>
+                        <button mat-button [disabled]="!fUp.form.valid" (click)="endFalse('Up')">Nein</button>
                         
                     </mat-expansion-panel>
                     <mat-expansion-panel class="subDecision" #ddown>
@@ -275,10 +294,86 @@
                         <div *ngIf="fDown.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <div *ngIf="!fDown.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <br>
-                        <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue(d.title-down)" (click)="ddown.expanded = false" >Ja</button>
-                        <button mat-button [disabled]="!fDown.form.valid" (click)="endFalse('Down')" (click)="ddown.expanded = false" >Nein</button>
+                        <button mat-button [disabled]="!fDown.form.valid" (click)="endTrue(d.title-down)" (click)="ddown.expanded = false" >Ja</button>
+                        <button mat-button [disabled]="!fDown.form.valid" (click)="endFalse('Down')">Nein</button>
                     </mat-expansion-panel>
                 </div>
+
+
+
+                <!-- Up Or Down -->
+                <div *ngIf="d.methodname=='aOrB'">
+                    <mat-expansion-panel class="subDecision" #da>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{d.title}} - A
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                        <form #fUp="ngForm">
+                            <table>
+                                <tr>
+                                    <td style="padding-bottom: 5px;">Zeit</td>
+                                    <td></td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToAMin" style="text-align: right;padding-right: 2px;" maxlength="2" name="Min" required pattern="([0-5]*[0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                    <td style="padding-bottom: 5px;">:</td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToASek" maxlength="2" name="Sek" required pattern="([0-5][0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+
+                        <br>
+                        <div *ngIf="fA.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <div *ngIf="!fA.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <br>
+                        <button mat-button [disabled]="!fA.form.valid" (click)="endTrue(d.title-a)" (click)="da.expanded = false" >Ja</button>
+                        <button mat-button [disabled]="!fA.form.valid" (click)="endFalse('A')">Nein</button>
+                        
+                    </mat-expansion-panel>
+                    <mat-expansion-panel class="subDecision" #db>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{d.title}} - B
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                        <form #fB="ngForm">
+                            <table>
+                                <tr>
+                                    <td style="padding-bottom: 5px;">Zeit</td>
+                                    <td></td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToBMin" style="text-align: right;padding-right: 2px;" maxlength="2" name="Min" required pattern="([0-5]*[0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                    <td style="padding-bottom: 5px;">:</td>
+                                    <td>
+                                        <mat-form-field style="width: 18px;">
+                                            <input matInput [(ngModel)]="d.timestampToBSek" maxlength="2" name="Sek" required pattern="([0-5][0-9])" />
+                                        </mat-form-field>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+
+                        <br>
+                        <div *ngIf="fB.form.valid" style="color: black;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <div *ngIf="!fB.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
+                        <br>
+                        <button mat-button [disabled]="!fB.form.valid" (click)="endTrue(d.title-b)" (click)="db.expanded = false" >Ja</button>
+                        <button mat-button [disabled]="!fB.form.valid" (click)="endFalse('B')">Nein</button>
+                    </mat-expansion-panel>
+                </div>
+
 
                 <!-- A B -->
                 <div *ngIf="d.methodname=='aOrB'">
@@ -314,7 +409,7 @@
                         <div *ngIf="!fA.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <br>
                         <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue(d.title-a)" (click)="da.expanded = false" >Ja</button>
-                        <button mat-button [disabled]="!fA.form.valid" (click)="endFalse('A')" (click)="da.expanded = false" >Nein</button>
+                        <button mat-button [disabled]="!fA.form.valid" (click)="endFalse('A')">Nein</button>
                         
                     </mat-expansion-panel>
                     <mat-expansion-panel class="subDecision" #db>
@@ -349,7 +444,7 @@
                         <div *ngIf="!fB.form.valid" style="color: gray;margin:0px; padding:0px;">Endet hier der Film?</div>
                         <br>
                         <button mat-button [disabled]="!fLeft.form.valid" (click)="endTrue(d.title-b)" (click)="db.expanded = false" >Ja</button>
-                        <button mat-button [disabled]="!fB.form.valid" (click)="endFalse('B')" (click)="db.expanded = false" >Nein</button>
+                        <button mat-button [disabled]="!fB.form.valid" (click)="endFalse('B')">Nein</button>
 
                         <form #fBend="ngForm">
                             <table>
@@ -372,6 +467,7 @@
                         </form>
                         <button mat-button [disabled]="!fBend.form.valid" (click)="endTrue()">Ok</button>
                         
+
 <!-- BEIM EXPORT SCHAUEN OB HIER NICHT ETWAS NICHT VALID IST -->
 <!-- ZEILE 137   <button mat-button [disabled]="!fLeft.form.valid" (click)="endFalse('Left')" (click)="panel1.expanded = true" (click)="panel1.expanded = false">Nein</button> AUSFEILEN MIT PANEL EXPANDED ETC.
 -->
