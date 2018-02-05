@@ -41,6 +41,15 @@ mat-card.projectBox {
     transition: 0.2s all;
 }
 
+.login_r{
+    border: 2px solid rgb(209, 151, 104);
+    border-radius: 3px;
+    transition: 0.2s all;
+}
+
+.login_r:hover{
+    background-color: rgb(209, 151, 104);
+}
 .login:hover{
     background-color: #B5D168;
 }
@@ -123,7 +132,7 @@ body {
 .timeBox {
     width: 80%;
     margin: auto;
-    min-height: 480px;
+    min-height: 520px;
 }
 
 .mat-button.mat-warn, .mat-icon-button.mat-warn {

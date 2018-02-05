@@ -5,7 +5,7 @@ import { Decision } from "../decision2";
 import { Player } from "../player";
 import {MatSnackBar} from '@angular/material';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { ThankyouDialogComponent } from 'app/thankyou-dialog/thankyou-dialog.component';
+import { ThankyouDialogComponent } from '../thankyou-dialog/thankyou-dialog.component';
 
 
 
@@ -113,16 +113,16 @@ export class MasterComponent implements OnInit {
 
 
   //Video Source
-  src = "http://vm18.htl-leonding.ac.at:8080/videos/video1.mp4";
+  src = "http://vm18.htl-leonding.ac.at:8080/videos/Create.mp4";
 
+  videoLoaded:boolean = false;
 
   subDecisions = [
     {value: 'leftOrRight', viewValue: 'Left or Right'},
     {value: 'upOrDown', viewValue: 'Up or Down'},
-    {value: 'aOrB', viewValue: 'A or B'}
+    {value: 'aOrB', viewValue: 'A or B'},
+    {value: 'press', viewValue: 'Press'}
   ];
-
-  public n: number = 1;
 
   constructor(rest:RestService, public snackBar: MatSnackBar, public dialog: MatDialog) {
     this.rest = rest;
@@ -140,17 +140,21 @@ export class MasterComponent implements OnInit {
     */
   }
 
-  timer: any;
+  description: string;
 
   export(){
     this.loading = true;
     console.log("export started!")
-    this.rest.uploadInteractions(this.decisions).subscribe(data => {console.log(data);
+    /*this.rest.uploadInteractions(this.description, "true", new Player("1", this.email, this.password), this.decisions).subscribe(data => {console.log(data);
       this.timer = setTimeout(() => {
         this.loading = false
         this.thankYou()
-    }, 500);
-    });
+      }, 500);
+    });*/
+    setTimeout(() => {
+      this.loading = false
+      this.thankYou()
+    }, 1200);
   }
     
   //Animation Functions
@@ -162,6 +166,9 @@ export class MasterComponent implements OnInit {
     this.hideUpload = (this.hideUpload === 'hideUploadBefore' ? 'hideUploadAfter' : 'hideUploadBefore');
     this.timeBox = (this.timeBox === 'timeBefore' ? 'timeAfter' : 'timeBefore');    
     this.allowLogout = false;
+    setTimeout(() => {
+      this.videoLoaded = true
+    }, 1200);
   }
 
   //LOGIN - REGISTER
@@ -176,6 +183,14 @@ export class MasterComponent implements OnInit {
     this.allowRegister = true;
     this.allowLogout = false;
     this.registerAnimation()
+  }
+
+  bgColor(allowRegister:boolean){
+    if(allowRegister) {
+      return "white";
+    } else {
+      return "white";
+    }
   }
 
   login() {
@@ -239,10 +254,24 @@ export class MasterComponent implements OnInit {
   uploadFile(event) {
     //Timeout - > Testzweck
     setTimeout(() => {
-      this.n = this.n + 10;
-      this.value = 100;  
-      this.uploaded = false;
+      this.value = 10;
+    }, 200);
+    setTimeout(() => {
+      this.value = 30;
     }, 1000);
+    setTimeout(() => {
+      this.value = 50;
+    }, 2000);
+    setTimeout(() => {
+      this.value = 70;
+    }, 7000);
+    setTimeout(() => {
+      this.value = 90;
+    }, 8000);
+    setTimeout(() => {
+      this.value = 100;
+      this.uploaded = false;
+    }, 11000);
         
     let files = event.target.files;
     if (files.length > 0) {
@@ -257,7 +286,8 @@ export class MasterComponent implements OnInit {
     //Export Button darf nur möglich sein, wenn alle Entscheidungen fertig sind (wenn alle "Endet hier der Film" mit "Ja" beantwortet werden konnten)
 
     var count = this.decisions.length+1;
-    this.decisions.push({title: "Entscheidung "+ count + " - " + nextStep, methodname: "", timestampMin: "", timestampSek: "", timestampToAMin: "", timestampToASek: "", timestampToBMin: "", timestampToBSek: ""});
+    //this.decisions.push({title: "Entscheidung "+ count + " - " + nextStep, methodname: "", timestampMin: "", timestampSek: "", timestampToAMin: "", timestampToASek: "", timestampToBMin: "", timestampToBSek: ""});
+    this.decisions.push({title: "Entscheidung "+ count, methodname: "", timestampMin: "", timestampSek: "", timestampToAMin: "", timestampToASek: "", timestampToBMin: "", timestampToBSek: ""});
   }
 
 
@@ -265,7 +295,7 @@ export class MasterComponent implements OnInit {
   thankYou(): void {
     let dialogRef = this.dialog.open(ThankyouDialogComponent, {
       width: '500px',
-      data: { name: "asdf", animal: "jklö" }
+      data: { name: "", animal: "" }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -280,8 +310,13 @@ export class MasterComponent implements OnInit {
 
   // Decision push --> methodname = death
 
+  filmEndetPress:boolean = false;
+
   endTrue(title:string) {
     this.expand(title);
+    if (title == "Press"){
+      this.filmEndetPress = true;
+    }
   }
 
   expand(title:string){
